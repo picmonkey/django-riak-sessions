@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 from django.conf import settings
 from django.contrib.sessions.backends.base import SessionBase, CreateError
-from django.contrib.sessions.backends.signed_cookies import SessionStore as SignedCookies
+from django.contrib.sessions.backends.signed_cookies import SessionStore as SignedCookiesSessionStore
 
 from riak_sessions import bucket
 import json
@@ -93,7 +93,7 @@ class SessionStore(SessionBase):
         logger.info("Fell through, this session does not exist...")
         if self._session_key:
             logger.info("Extracting session from old cookie.")
-            tempSession = SignedCookies(self._session_key)
+            tempSession = SignedCookiesSessionStore(self._session_key)
             temp_session_state = tempSession.load()
             self.create()
             data = {'data': self.encode(temp_session_state),
